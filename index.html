@@ -68,3 +68,31 @@ function generateQR() {
 </body>
 
 </html>
+<section class="qr-section">
+    <div class="qr-header">
+        <span class="qr-icon">📱</span>
+        <h2>QR Code Ordering</h2>
+        <p>Make ordering easier for your customers!</p>
+    </div>
+
+    <div class="qr-content">
+        <div class="qr-info">
+            <h3>Scan. Order. Enjoy.</h3>
+            <p>
+                Customers can scan the QR code
+                using their smartphones to access
+                the online ordering page.
+            </p>
+
+            <button type="button" onclick="generateQR()">
+                Generate QR Code
+            </button>
+        </div>
+
+        <div class="qr-display">
+            <div id="qrcode"></div>
+            <span class="qr-caption">Scan to start ordering</span>
+        </div>
+    </div>
+</section>
+
