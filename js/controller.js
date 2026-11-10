@@ -230,12 +230,6 @@ export function controlCheckoutQuick(value) {
   renderCheckout();
 }
 
-export function controlApplyPromo(code) {
-  model.applyPromoCode(code);
-  renderPos();
-}
-
-
 export function controlConfirmPayment() {
   const { method, tendered } = checkoutDraft;
   if (method === 'Cash') {
@@ -530,8 +524,6 @@ adminView.addHandlerRemove((id, confirm) => controlRemoveProduct(id, confirm));
 adminView.addHandlerPhoto(controlPhoto);
 adminView.addHandlerRemovePhoto(controlRemovePhoto);
 adminView.addHandlerChangePin(controlChangePin);
-
-posView.addHandlerApplyPromo(controlApplyPromo);
 
 /* ---------- boot ---------- */
 

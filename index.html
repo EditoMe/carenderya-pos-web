@@ -1,5 +1,5 @@
-<!--
-  Carenderya POS — ITPFE 1 Prelim Project
+﻿<!--
+  KusinaHub — ITPFE 1 Prelim Project
   View framework (plain JavaScript, ES modules, MVC).
   No inline onclick anywhere: all user actions are wired by the controller.
 -->
@@ -14,7 +14,10 @@
 </head>
 
 <body>
-  <div class="app">
+  <!-- View: login page (owner/staff). -->
+  <section class="login-view"></section>
+
+  <div class="app" hidden>
     <!-- View: navigation rail. Owner: Member 1 -->
     <nav class="rail"></nav>
 
@@ -33,33 +36,6 @@
     <!-- View: admin (PIN gate + add/edit/remove products). Owner: Member 3 -->
     <section class="admin-view" hidden></section>
   </div>
-  <section class="qr-section">
-    <h2>QR Code Ordering</h2>
-    <p>Scan this QR code to order food.</p>
-
-    <div id="qrcode"></div>
-
-    <button onclick="generateQR()">
-        Generate QR Code
-    </button>
-</section>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<script>
-function generateQR() {
-    document.getElementById("qrcode").innerHTML = "";
-
-    const orderingLink =
-        "https://YOUR-WEBSITE.com/customer-order.html?table=1";
-
-    new QRCode(document.getElementById("qrcode"), {
-        text: orderingLink,
-        width: 200,
-        height: 200
-    });
-}
-</script>
 
   <!-- View: checkout (payment form + validation error). Owner: Member 2 -->
   <section class="checkout-view" hidden></section>
@@ -68,31 +44,3 @@ function generateQR() {
 </body>
 
 </html>
-<section class="qr-section">
-    <div class="qr-header">
-        <span class="qr-icon">📱</span>
-        <h2>QR Code Ordering</h2>
-        <p>Make ordering easier for your customers!</p>
-    </div>
-
-    <div class="qr-content">
-        <div class="qr-info">
-            <h3>Scan. Order. Enjoy.</h3>
-            <p>
-                Customers can scan the QR code
-                using their smartphones to access
-                the online ordering page.
-            </p>
-
-            <button type="button" onclick="generateQR()">
-                Generate QR Code
-            </button>
-        </div>
-
-        <div class="qr-display">
-            <div id="qrcode"></div>
-            <span class="qr-caption">Scan to start ordering</span>
-        </div>
-    </div>
-</section>
-
