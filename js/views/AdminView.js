@@ -139,7 +139,7 @@ export class AdminView extends View {
             ${this._editingId === m.id ? `
               <div class="form-row">
                 <input class="admin-input" id="price-draft" type="text" inputmode="decimal"
-                       placeholder="0.00" value="${esc(this._priceDraft)}" style="width:100px">
+                      placeholder="0.00" value="${esc(this._priceDraft)}" style="width:100px">
                 <button class="admin-btn" data-save-price="${m.id}">Save</button>
                 <button class="admin-btn ghost" data-cancel-price>Cancel</button>
               </div>

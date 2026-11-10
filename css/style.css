@@ -266,26 +266,5 @@ body {
   .rail { width: 60px; }
   .rail-btn { width: 52px; }
 
-  .qr-section {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    text-align: center;
-    margin: 20px;
-}
-
-#qrcode {
-    display: flex;
-    justify-content: center;
-    margin: 20px;
-}
-
-.qr-section button {
-    background: #e87935;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    cursor: pointer;
-}
+  
 }
