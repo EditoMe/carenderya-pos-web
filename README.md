@@ -22,8 +22,7 @@ Default admin PIN: `1234`.
 
 ```
 carenderya-pos-web/
-├── index.html                  # parent elements + module script (no inline onclick)
-├── css/
+├── index.html
 │   └── style.css               # all styling
 ├── js/
 │   ├── model.js                # ONE exported state object + mutating functions
@@ -40,8 +39,7 @@ carenderya-pos-web/
 └── assets/images/dishes/       # Figma prototype dish photos
 ```
 
-## MVC rules (graded)
-
+## MVC rules
 - **Model** holds all data in one exported `state` object; functions mutate it
   and persist to `localStorage`. Never touches the DOM.
 - **Views** extend `View`, build markup from the data they receive, and expose
@@ -51,7 +49,7 @@ carenderya-pos-web/
   talks to both: view handler → controller function → model update →
   view re-render. No inline `onclick` anywhere.
 
-## Deploy (GitHub Pages)
+## Deploy
 
 Push this folder to a public GitHub repo and enable **Settings → Pages →
 Deploy from branch → `/ (root)`**. The live link then works with no build step.
