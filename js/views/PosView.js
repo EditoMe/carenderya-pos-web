@@ -125,7 +125,6 @@ export class PosView extends View {
       <div class="sums">
         <div class="sum-row"><span class="k">Price</span><span class="v">${peso(totals.subtotal)}</span></div>
         <div class="sum-row"><span class="k">Discount</span><span class="v">${totals.discount > 0 ? '-' + peso(totals.discount) : peso(0)}</span></div>
-        <div class="sum-row"><span class="k">Tax (12%)</span><span class="v">${peso(totals.tax)}</span></div>
         <div class="div"></div>
         <div class="sum-row total"><span class="k">Total</span><span class="v">${peso(totals.total)}</span></div>
       </div>

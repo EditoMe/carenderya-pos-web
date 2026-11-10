@@ -72,7 +72,6 @@ export class CheckoutView extends View {
           <div class="co-sums">
             <div class="sum-row"><span class="k">Subtotal</span><span class="v">${peso(totals.subtotal)}</span></div>
             <div class="sum-row"><span class="k">Discount</span><span class="v">${totals.discount > 0 ? '-' + peso(totals.discount) : peso(0)}</span></div>
-            <div class="sum-row"><span class="k">Tax (12%)</span><span class="v">${peso(totals.tax)}</span></div>
             <div class="sum-row total"><span class="k">Total due</span><span class="v">${peso(totals.total)}</span></div>
             ${method === 'Cash' && tendered !== '' ? `
               <div class="sum-row total"><span class="k">Change</span>

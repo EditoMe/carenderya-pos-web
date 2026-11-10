@@ -81,7 +81,6 @@ export class OrdersView extends View {
         <div class="div"></div>
         <div class="sum-row"><span class="k">Subtotal</span><span class="v">${peso(order.subtotal)}</span></div>
         <div class="sum-row"><span class="k">Discount</span><span class="v">${order.discount > 0 ? '-' + peso(order.discount) : peso(0)}</span></div>
-        <div class="sum-row"><span class="k">Tax (12%)</span><span class="v">${peso(order.tax)}</span></div>
         <div class="sum-row total"><span class="k">Total</span><span class="v">${peso(order.total)}</span></div>
       </div>
       <div class="order-actions">

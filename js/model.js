@@ -43,7 +43,7 @@ function seedOrders() {
         { id: 'adobo', qty: 1, name: 'Chicken Adobo', price: 65 },
         { id: 'plain-rice', qty: 2, name: 'Plain Rice', price: 15 },
       ],
-      subtotal: 95, discount: 0, tax: 11.4, total: 106.4,
+      subtotal: 95, discount: 0, tax: 0, total: 95,
     },
     {
       id: 'DY1023', type: 'Take Away', status: 'In Progress',
@@ -52,7 +52,7 @@ function seedOrders() {
         { id: 'sinigang', qty: 1, name: 'Pork Sinigang', price: 80 },
         { id: 'sago', qty: 1, name: "Sago't Gulaman", price: 25 },
       ],
-      subtotal: 105, discount: 0, tax: 12.6, total: 117.6,
+      subtotal: 105, discount: 0, tax: 0, total: 105,
     },
     {
       id: 'DY1024', type: 'Deliver', status: 'In Progress',
@@ -61,7 +61,7 @@ function seedOrders() {
         { id: 'sisig', qty: 2, name: 'Sisig', price: 85 },
         { id: 'plain-rice', qty: 2, name: 'Plain Rice', price: 15 },
       ],
-      subtotal: 200, discount: 20, tax: 21.6, total: 201.6,
+      subtotal: 200, discount: 20, tax: 0, total: 180,
     },
   ];
 }
@@ -140,10 +140,10 @@ export const peso = (n) =>
 export function cartTotals() {
   const subtotal = state.cart.reduce((s, l) => s + priceOf(l.id) * l.qty, 0);
   const discount = state.promo ? subtotal * 0.1 : 0;
-  const tax = (subtotal - discount) * 0.12;
+  const tax = 0;
   return {
     subtotal, discount, tax,
-    total: subtotal - discount + tax,
+    total: subtotal - discount,
     count: state.cart.reduce((s, l) => s + l.qty, 0),
   };
 }
