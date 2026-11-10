@@ -1,0 +1,40 @@
+<!--
+  Carenderya POS — ITPFE 1 Prelim Project
+  View framework (plain JavaScript, ES modules, MVC).
+  No inline onclick anywhere: all user actions are wired by the controller.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carenderya POS — View Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- View: navigation rail. Owner: Member 1 -->
+    <nav class="rail"></nav>
+
+    <!-- View: POS terminal (menu grid + analytics + order summary). Owner: Member 1 -->
+    <main class="pos"></main>
+
+    <!-- View: orders queue. Owner: Member 2 -->
+    <section class="orders-view" hidden></section>
+
+    <!-- View: sales history. Owner: Member 2 -->
+    <section class="history-view" hidden></section>
+
+    <!-- View: menu availability. Owner: Member 3 -->
+    <section class="menu-view" hidden></section>
+
+    <!-- View: admin (PIN gate + add/edit/remove products). Owner: Member 3 -->
+    <section class="admin-view" hidden></section>
+  </div>
+
+  <!-- View: checkout (payment form + validation error). Owner: Member 2 -->
+  <section class="checkout-view" hidden></section>
+
+  <script type="module" src="js/controller.js"></script>
+</body>
+</html>
