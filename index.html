@@ -5,12 +5,14 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carenderya POS — View Framework</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <div class="app">
     <!-- View: navigation rail. Owner: Member 1 -->
@@ -31,10 +33,38 @@
     <!-- View: admin (PIN gate + add/edit/remove products). Owner: Member 3 -->
     <section class="admin-view" hidden></section>
   </div>
+  <section class="qr-section">
+    <h2>QR Code Ordering</h2>
+    <p>Scan this QR code to order food.</p>
+
+    <div id="qrcode"></div>
+
+    <button onclick="generateQR()">
+        Generate QR Code
+    </button>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+function generateQR() {
+    document.getElementById("qrcode").innerHTML = "";
+
+    const orderingLink =
+        "https://YOUR-WEBSITE.com/customer-order.html?table=1";
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: orderingLink,
+        width: 200,
+        height: 200
+    });
+}
+</script>
 
   <!-- View: checkout (payment form + validation error). Owner: Member 2 -->
   <section class="checkout-view" hidden></section>
 
   <script type="module" src="js/controller.js"></script>
 </body>
+
 </html>
