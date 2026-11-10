@@ -78,12 +78,15 @@ function freshState() {
     promo: false,
     orders: seedOrders(),
     orderSeq: 1025,
-    view: 'pos',            // which screen is visible
+    view: 'pos',            // which screen is visible (inside app)
     category: 'All Menu',   // POS category filter
     search: '',             // POS search text
     salesPeriod: 'all',     // history filter: day | week | month | year | all
     salesArchive: [],       // archived/reset sales snapshots for recent activity
     admin: { isAdmin: false, pin: DEFAULT_PIN, section: 'photos' },
+    auth: { loggedIn: false, role: null, name: '', email: '', accountId: null }, // app login
+    accounts: [],           // registered accounts {id, role, name, email, password, createdAt}
+    staffPin: '0000',
     photos: {},             // { dishId: dataURL } owner-uploaded photos
   };
 }
@@ -93,12 +96,16 @@ function loadState() {
     const raw = localStorage.getItem(STORE_KEY);
     if (!raw) return freshState();
     const saved = JSON.parse(raw);
+    const base = freshState();
     // Shallow-merge over defaults so new fields always exist.
     return {
-      ...freshState(),
+      ...base,
       ...saved,
       salesArchive: Array.isArray(saved.salesArchive) ? saved.salesArchive : [],
-      admin: { ...freshState().admin, ...(saved.admin || {}) },
+      admin: { ...base.admin, ...(saved.admin || {}) },
+      auth: { ...base.auth, ...(saved.auth || {}) },
+      accounts: Array.isArray(saved.accounts) ? saved.accounts : [],
+      staffPin: typeof saved.staffPin === 'string' ? saved.staffPin : base.staffPin,
     };
   } catch {
     return freshState();
@@ -386,5 +393,87 @@ export function setPhoto(id, dataUrl) {
 
 export function removePhoto(id) {
   delete state.photos[id];
+  save();
+}
+
+/* ---------- app login / accounts ---------- */
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function isGmail(email) {
+  return /^[a-z0-9._%+-]+@gmail\.com$/i.test(email);
+}
+
+export function loginOwner(pin) {
+  if (pin === state.admin.pin) {
+    state.auth = { loggedIn: true, role: 'owner', name: 'Owner', email: '', accountId: null };
+    save();
+    return true;
+  }
+  return false;
+}
+
+export function loginStaff(name, pin) {
+  const n = String(name || '').trim();
+  if (!n) return { ok: false, error: 'Enter the staff name.' };
+  if (pin !== state.staffPin) return { ok: false, error: 'Incorrect staff PIN.' };
+  state.auth = { loggedIn: true, role: 'staff', name: n, email: '', accountId: null };
+  save();
+  return { ok: true };
+}
+
+export function createAccount({ role, name, email, password }) {
+  const n = String(name || '').trim();
+  const e = normalizeEmail(email);
+  const p = String(password || '');
+
+  if (role !== 'owner' && role !== 'staff') {
+    return { ok: false, error: 'Choose Owner or Staff.' };
+  }
+  if (!n) return { ok: false, error: 'Enter your name.' };
+  if (!isGmail(e)) return { ok: false, error: 'Enter a valid Gmail address (example@gmail.com).' };
+  if (p.length < 4) return { ok: false, error: 'Password must be at least 4 characters.' };
+  if ((state.accounts || []).some((a) => normalizeEmail(a.email) === e)) {
+    return { ok: false, error: 'An account with this Gmail already exists.' };
+  }
+
+  const account = {
+    id: `acct-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    role,
+    name: n,
+    email: e,
+    password: p,
+    createdAt: Date.now(),
+  };
+  state.accounts = [account, ...(state.accounts || [])];
+  state.auth = { loggedIn: true, role, name: n, email: e, accountId: account.id };
+  save();
+  return { ok: true, account };
+}
+
+export function loginAccount(email, password) {
+  const e = normalizeEmail(email);
+  const p = String(password || '');
+  if (!isGmail(e)) return { ok: false, error: 'Enter a valid Gmail address.' };
+  if (!p) return { ok: false, error: 'Enter your password.' };
+  const account = (state.accounts || []).find((a) => normalizeEmail(a.email) === e);
+  if (!account) return { ok: false, error: 'No account found for this Gmail. Create an account first.' };
+  if (account.password !== p) return { ok: false, error: 'Incorrect password.' };
+  state.auth = {
+    loggedIn: true,
+    role: account.role,
+    name: account.name,
+    email: account.email,
+    accountId: account.id,
+  };
+  save();
+  return { ok: true, account };
+}
+
+export function logout() {
+  state.auth = { loggedIn: false, role: null, name: '', email: '', accountId: null };
+  state.admin.isAdmin = false; // also lock admin area on logout
   save();
 }

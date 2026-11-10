@@ -13,6 +13,7 @@ import { HistoryView } from './views/HistoryView.js';
 import { CheckoutView } from './views/CheckoutView.js';
 import { MenuView } from './views/MenuView.js';
 import { AdminView } from './views/AdminView.js';
+import { LoginView } from './views/LoginView.js';
 
 /* ---------- construct one view per parent element ---------- */
 
@@ -25,8 +26,10 @@ const historyView = new HistoryView($('.history-view'));
 const checkoutView = new CheckoutView($('.checkout-view'));
 const menuView = new MenuView($('.menu-view'));
 const adminView = new AdminView($('.admin-view'));
+const loginView = new LoginView($('.login-view'));
 
-// Checkout + order detail are overlay screens above the rail layout.
+// Login gates the app; checkout is an overlay inside the app flow.
+const loginEl = $('.login-view');
 const checkoutParent = $('.checkout-view');
 const appEl = $('.app');
 
@@ -35,11 +38,12 @@ const appEl = $('.app');
 let openOrderId = null;      // order detail currently shown
 let checkoutDraft = null;    // { method, tendered, error, doneId }
 let adminPin = '';           // typed PIN (view-owned digits come via handlers)
+let loginDraft = { mode: 'login', role: 'owner', name: '', email: '', password: '', error: '', success: '' };
 
 /* ---------- render functions (hand state → view) ---------- */
 
 function renderNav() {
-  navView.render({ view: model.state.view });
+  navView.render({ view: model.state.view, user: model.state.auth });
 }
 
 function renderPos() {
@@ -108,7 +112,25 @@ function renderAdmin() {
   });
 }
 
+function renderLogin() {
+  loginEl.hidden = false;
+  appEl.hidden = true;
+  checkoutParent.hidden = true;
+  loginView.render({ ...loginDraft });
+}
+
 function renderAll() {
+  if (!model.state.auth?.loggedIn) {
+    renderLogin();
+    return;
+  }
+
+  // Guard: staff accounts must not access the admin dashboard.
+  if (model.state.view === 'admin' && model.state.auth?.role !== 'owner') {
+    model.state.view = 'pos';
+  }
+
+  loginEl.hidden = true;
   const { view } = model.state;
   appEl.hidden = view === 'checkout';
   checkoutParent.hidden = view !== 'checkout';
@@ -133,6 +155,12 @@ function renderAll() {
 /* ---------- controller functions (one per user action) ---------- */
 
 export function controlNavigate(view) {
+  // Staff accounts must not access the admin dashboard.
+  if (view === 'admin' && model.state.auth?.role !== 'owner') {
+    model.setView('pos');
+    renderAll();
+    return;
+  }
   model.setView(view);
   renderAll();
 }
@@ -387,9 +415,74 @@ export function controlChangePin(current, next) {
   renderAdmin();
 }
 
+/* ---------- login / account creation (Gmail) ---------- */
+
+export function controlLoginMode(mode) {
+  loginDraft.mode = mode === 'create' ? 'create' : 'login';
+  loginDraft.error = '';
+  loginDraft.success = '';
+  loginDraft.password = '';
+  renderLogin();
+}
+
+export function controlLoginRole(role) {
+  loginDraft.role = role === 'staff' ? 'staff' : 'owner';
+  loginDraft.error = '';
+  renderLogin();
+}
+
+export function controlLoginField(field, value) {
+  if (field === 'name') loginDraft.name = String(value || '').slice(0, 60);
+  if (field === 'email') loginDraft.email = String(value || '').slice(0, 120);
+  if (field === 'password') loginDraft.password = String(value || '').slice(0, 60);
+  loginDraft.error = '';
+  loginDraft.success = '';
+  // avoid full re-render on keystrokes to keep typing smooth
+}
+
+export function controlLoginSubmit() {
+  if (loginDraft.mode === 'create') {
+    const res = model.createAccount({
+      role: loginDraft.role,
+      name: loginDraft.name,
+      email: loginDraft.email,
+      password: loginDraft.password,
+    });
+    if (!res.ok) {
+      loginDraft.error = res.error || 'Could not create account.';
+      renderLogin();
+      return;
+    }
+    loginDraft = { mode: 'login', role: 'owner', name: '', email: '', password: '', error: '', success: '' };
+    renderAll();
+    return;
+  }
+
+  const res = model.loginAccount(loginDraft.email, loginDraft.password);
+  if (!res.ok) {
+    loginDraft.error = res.error || 'Login failed.';
+    renderLogin();
+    return;
+  }
+  loginDraft = { mode: 'login', role: 'owner', name: '', email: '', password: '', error: '', success: '' };
+  renderAll();
+}
+
+export function controlLogout() {
+  model.logout();
+  loginDraft = { mode: 'login', role: 'owner', name: '', email: '', password: '', error: '', success: '' };
+  renderAll();
+}
+
 /* ---------- wire every view handler to its controller function ---------- */
 
+loginView.addHandlerMode(controlLoginMode);
+loginView.addHandlerRole(controlLoginRole);
+loginView.addHandlerField(controlLoginField);
+loginView.addHandlerSubmit(controlLoginSubmit);
+
 navView.addHandlerNavigate(controlNavigate);
+navView.addHandlerLogout(controlLogout);
 
 posView.addHandlerOrderType(controlOrderType);
 posView.addHandlerCategory(controlCategory);
