@@ -40,8 +40,8 @@ export class PosView extends View {
     <div class="pos-main">
       <div class="pos-head">
         <div>
-          <div class="brand">🍲 Carenderya POS</div>
-          <div class="brand-sub">carenderya-pos-dashboard</div>
+          <div class="brand">🍲 KusinaHub</div>
+          <div class="brand-sub">kusinahub-dashboard</div>
         </div>
         <div class="type-row">
           ${['Dine In', 'Take Away', 'Deliver'].map((t) => `

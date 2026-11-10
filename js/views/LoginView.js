@@ -15,7 +15,7 @@ export class LoginView extends View {
     return `
       <div class="login-card">
         <div class="login-brand">🍲</div>
-        <div class="view-title" style="text-align:center">Carenderya POS</div>
+        <div class="view-title" style="text-align:center">KusinaHub</div>
         <div class="view-sub" style="text-align:center">Owner or staff — sign in with your Gmail account</div>
 
         <div class="seg" style="margin:12px auto 10px; width:max-content">
