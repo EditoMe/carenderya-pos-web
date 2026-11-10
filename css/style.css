@@ -260,12 +260,19 @@ body {
 .modal-sub { font-size: 12px; color: #8b8378; margin-top: 6px; line-height: 1.5; }
 .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
 
-/* ---------- Login view + QR owner login ---------- */
-.login-view { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+/* ---------- Login view ---------- */
+.login-view {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #f4f1eb url('../assets/images/login-home.png') center / cover no-repeat fixed;
+}
 .login-view[hidden] { display: none !important; }
 .login-card {
   width: 100%; max-width: 420px; background: #fff; border: 1px solid #e9e2d8;
   border-radius: 16px; padding: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
 }
 .login-brand { font-size: 48px; text-align: center; }
 .qr-panel {
