@@ -1,4 +1,4 @@
-# Carenderya POS — Web Systems Prelim Project (View framework)
+# KusinaHub    A Web-Based Carenderia Management
 
 A working single-page POS for a carinderia, built with the course's **View
 framework** in plain JavaScript (ES modules, strict MVC). Same functionality as
